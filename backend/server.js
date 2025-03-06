@@ -45,7 +45,16 @@ app.post("/register", (req, res) => {
       res.status(200).json({ message: "Login successful!" });
     });
   });
+  app.get("/location",(req,res)=>{
+    const search=req.query.search;
+    const query="SELECT * FROM locations WHERE locationname LIKE ?";
   
+  db.query(query, [`%${search}%`], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+
+  });
   // Start server
   const PORT = 5000;
   app.listen(PORT, () => {
