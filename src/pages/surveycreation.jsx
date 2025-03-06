@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { IoArrowBack, IoSearchOutline, IoAdd } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
 import {
@@ -12,12 +10,56 @@ import {
   BiLink,
 } from "react-icons/bi";
 import Input from "../components/input/Input"; // Ensure this component exists
-import Card from "../components/problem/Card";
+import Card from "../components/problem/Card"; // Ensure this component exists
+import LogCreation from "../components/Popups/Inprogress/LogCreation"; // Ensure this component exists
 
 const Dashboard = () => {
   const [selectedCategories, setSelectedCategories] = useState([]); // Track selected categories
   const [files, setFiles] = useState([]); // Track uploaded files
+  const [showLogCreation, setShowLogCreation] = useState(false); // Track visibility of LogCreation
+  const [searchQuery, setSearchQuery] = useState(""); // Track search query
+  const [fileError, setFileError] = useState(""); // Track file upload errors
   const contentEditableRef = useRef(null); // Ref for the contenteditable div
+  const scrollableRef = useRef(null); // Ref for the scrollable container
+
+  // Define cardData before using it
+  const cardData = [
+    {
+      title: "Productivity failure",
+      status: "New",
+      description:
+        "Productive failure is a learning design where individuals are allowed to fail in a managed way.",
+      date: "2023-10-15",
+      author: "J. David",
+      imageUrl: "/user1.jpg",
+    },
+    {
+      title: "Task Management",
+      status: "Accepted",
+      description:
+        "Effective task management strategies to improve productivity and focus.",
+      date: "2023-10-14",
+      author: "A. Smith",
+      imageUrl: "/user2.jpg",
+    },
+    {
+      title: "Time Tracking",
+      status: "Rejected",
+      description:
+        "Tools and techniques for tracking time and improving efficiency.",
+      date: "2023-10-13",
+      author: "M. Johnson",
+      imageUrl: "/user3.jpg",
+    },
+  ];
+
+  // Filter cards based on search query
+  const filteredCards = cardData.filter(
+    (card) =>
+      card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.author.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Function to apply formatting
   const applyFormatting = (command, value = null) => {
@@ -29,7 +71,9 @@ const Dashboard = () => {
   // Function to toggle category selection
   const toggleCategory = (category) => {
     if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter((c) => c !== category)); // Deselect
+      setSelectedCategories(
+        selectedCategories.filter((c) => c !== category)
+      ); // Deselect
     } else {
       setSelectedCategories([...selectedCategories, category]); // Select
     }
@@ -39,9 +83,10 @@ const Dashboard = () => {
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files); // Convert FileList to array
     if (selectedFiles.length + files.length > 5) {
-      alert("You can upload a maximum of 5 files."); // Show error if more than 5 files
+      setFileError("You can upload a maximum of 5 files."); // Show error if more than 5 files
       return;
     }
+    setFileError(""); // Clear error
     setFiles([...files, ...selectedFiles]); // Add new files to the state
   };
 
@@ -51,101 +96,71 @@ const Dashboard = () => {
     setFiles(updatedFiles);
   };
 
+  // Function to handle card click
+  const handleCardClick = (status) => {
+    if (status === "New") {
+      setShowLogCreation(true); // Open LogCreation popup
+    } else {
+      alert(`Card status: ${status}`);
+    }
+  };
+
+  // Function to handle search input change
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Function to handle form submission
+  const handleCreate = () => {
+    const problemTitle = document.querySelector(
+      "input[placeholder='Enter the problem']"
+    ).value;
+    const description = contentEditableRef.current.innerText;
+    const questions = Array.from(
+      document.querySelectorAll("input[placeholder='Type your answer']")
+    ).map((input) => input.value);
+
+    const formData = {
+      problemTitle,
+      description,
+      questions,
+      selectedCategories,
+      files,
+    };
+
+    console.log("Form Data:", formData); // Replace with actual submission logic
+    alert("Form submitted successfully!");
+  };
+
   const categories = [
     "Productivity failure",
-    "Productivity failure",
     "Mismanagement",
-    "Mismanagement",
-    "Mismanagement",
-    "Mismanagement",
-    "Mismanagement",
-    "Productivity failure",
-    "Productivity failure",
+    "Time Management",
+    "Communication Issues",
   ];
 
-  const cardData = [
-    {
-      title: "Productivity failure",
-      status: "New",
-      description:
-        "Productive failure is a learning design where individuals are allowed to fail in a managed way.",
-      date: "2023-10-15",
-      author: "J. David",
-      imageUrl: "/user1.jpg", // Replace with actual image URL or use placeholder
-    },
-    {
-      title: "Task Management",
-      status: "Completed",
-      description:
-        "Effective task management strategies to improve productivity and focus.",
-      date: "2023-10-14",
-      author: "A. Smith",
-      imageUrl: "/user2.jpg", // Replace with actual image URL or use placeholder
-    },
-    {
-      title: "Time Tracking",
-      status: "Rejected",
-      description:
-        "Tools and techniques for tracking time and improving efficiency.",
-      date: "2023-10-13",
-      author: "M. Johnson",
-      imageUrl: "/user3.jpg", // Replace with actual image URL or use placeholder
-    },
-    {
-      title: "Time Tracking",
-      status: "Rejected",
-      description:
-        "Tools and techniques for tracking time and improving efficiency.",
-      date: "2023-10-13",
-      author: "M. Johnson",
-      imageUrl: "/user3.jpg", // Replace with actual image URL or use placeholder
-    },
-    {
-      title: "Time Tracking",
-      status: "Rejected",
-      description:
-        "Tools and techniques for tracking time and improving efficiency.",
-      date: "2023-10-13",
-      author: "M. Johnson",
-      imageUrl: "/user3.jpg", // Replace with actual image URL or use placeholder
-    },
-    {
-      title: "Time Tracking",
-      status: "Rejected",
-      description:
-        "Tools and techniques for tracking time and improving efficiency.",
-      date: "2023-10-13",
-      author: "M. Johnson",
-      imageUrl: "/user3.jpg", // Replace with actual image URL or use placeholder
-    },
-    {
-      title: "Time Tracking",
-      status: "Rejected",
-      description:
-        "Tools and techniques for tracking time and improving efficiency.",
-      date: "2023-10-13",
-      author: "M. Johnson",
-      imageUrl: "/user3.jpg", // Replace with actual image URL or use placeholder
-    },
-    {
-      title: "Time Tracking",
-      status: "Rejected",
-      description:
-        "Tools and techniques for tracking time and improving efficiency.",
-      date: "2023-10-13",
-      author: "M. Johnson",
-      imageUrl: "/user3.jpg", // Replace with actual image URL or use placeholder
-    },
-  ];
+  // Scroll to bottom when cardData changes
+  useEffect(() => {
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
+    }
+  }, [cardData]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Main content */}
-      <div className="flex h-screen justify-between w-full bg-white p-6 border-b border-[#D3E4FF]">
+    <div
+      className={`min-h-screen bg-gray-50 ${
+        showLogCreation ? "opacity-50 pointer-events-none" : ""
+      }`}
+    >
+      {/* Overlay when popup is active */}
+      {showLogCreation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+      )}
+      <div className="flex flex-col lg:flex-row h-screen justify-between w-full bg-white p-6 border-b border-[#D3E4FF]">
         {/* Left side - Log creation form */}
-        <div className="w-1/2 p-2 w-full border-r border-gray-200 overflow-y-auto scrollbar-hide">
+        <div className="w-full lg:w-3/5 p-2 overflow-y-auto scrollbar-hide">
           <div className="flex items-center mb-6">
-            <button className="text-gray-500 mr-3">
+            <button className="text-gray-500 mr-3" onClick={() => setShowLogCreation(false)}>
               <IoArrowBack />
             </button>
             <h2 className="text-lg font-medium">Log creation</h2>
@@ -274,6 +289,7 @@ const Dashboard = () => {
                   </label>
                 </>
               )}
+              {fileError && <p className="text-red-500 text-xs mt-2">{fileError}</p>}
             </div>
           </div>
 
@@ -298,34 +314,33 @@ const Dashboard = () => {
           <div className="bottom-6 bg-white pt-1 pb-20">
             <button
               className="w-full py-3 bg-orange-500 text-white rounded-md font-medium"
-              onClick={() => alert("Create clicked!")}
+              onClick={handleCreate}
             >
               Create
             </button>
           </div>
         </div>
 
-        <div className="w-1/3 p-6 overflow-y-auto scrollbar-hide relative">
-          <div className="sticky top-0 bg-white z-50 shadow-md py-2">
-            <div className="container mx-auto px-4 flex items-center gap-2">
-              <div className="relative flex-1">
-                <Input
-                  type="text"
-                  placeholder="Search any problem"
-                  icon={<IoSearchOutline className="text-gray-400" />}
-                  className="w-full rounded-full pl-10 pr-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF7622] focus:border-[#FF7622] transition-all"
-                />
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <IoSearchOutline className="text-gray-400" />
-                </div>
-              </div>
-            </div>
+        {/* Right side - Search and Cards */}
+        <div className="w-full lg:w-1/3 flex flex-col h-screen">
+          {/* Sticky Search Bar */}
+          <div className="sticky top-0 bg-white z-10 p-4">
+            <Input
+              type="text"
+              placeholder="Search any problem"
+              icon={<IoSearchOutline className="text-gray-400" />}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="rounded-full pl-10 border-gray-300 focus:ring-2 focus:ring-[#FF7622]"
+            />
           </div>
-          {/* Cards Container */}
-          <div className="pt-4 space-y-4">
-            {" "}
-            {/* Add padding-top to prevent overlap with the sticky search bar */}
-            {cardData.map((card, index) => (
+
+          {/* Scrollable Cards Container */}
+          <div
+            ref={scrollableRef}
+            className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide"
+          >
+            {filteredCards.map((card, index) => (
               <Card
                 key={index}
                 title={card.title}
@@ -334,11 +349,21 @@ const Dashboard = () => {
                 date={card.date}
                 author={card.author}
                 imageUrl={card.imageUrl}
+                onClick={() => handleCardClick(card.status)} // Handle card click
               />
             ))}
           </div>
         </div>
       </div>
+
+      {/* LogCreation Popup */}
+      {showLogCreation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-auto">
+          <div className="bg-white p-6 rounded-md shadow-md w-1/2 max-h-[90vh] overflow-y-auto">
+            <LogCreation onClose={() => setShowLogCreation(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
