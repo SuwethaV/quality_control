@@ -71,10 +71,10 @@ const Calender = ({ days, dates, timeSlots, events, selectedDay, onDayClick }) =
               ))}
           </div>
         ))}
-
+ 
         {/* Current time indicator */}
         <div className="absolute left-0 right-0 p-55 flex items-center" style={{ top: `${currentTimePosition}px` }}>
-          <div className="w-full h-0.5 bg-red-400"></div>
+          {/* <div className="w-full h-0.5 bg-red-400"></div> */}
           <div className="bg-white border border-gray-300 rounded-full p-2 absolute left-1/2 transform -translate-x-1/2">
             <Plus className="h-4 w-4 text-gray-400" />
           </div>

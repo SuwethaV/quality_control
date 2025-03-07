@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
 const LoginPage = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -53,9 +53,10 @@ const LoginPage = () => {
       if (response.status === 201 || response.status === 200) {
         if (isRegistering) {
           setSuccess("Registration successful! Redirecting to login...");
-          setIsRegistering(false); // Switch to login page
+          setTimeout(() => setIsRegistering(false), 2000); // Switch to login page after delay
         } else {
           setSuccess("Login successful!");
+          // Here you would typically redirect or store auth token
         }
       }
     } catch (err) {
@@ -69,84 +70,49 @@ const LoginPage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#fff3e0",
-        padding: "1rem",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          padding: "2rem",
-          borderRadius: "8px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          width: "100%",
-          maxWidth: "400px",
-        }}
-      >
-        <h2 style={{ textAlign: "center", color: "#ff9800" }}>
+    <div className="flex justify-center items-center h-screen bg-amber-50 p-4">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-center text-amber-500 text-2xl font-bold mb-6">
           {isRegistering ? "Register" : "Login"}
         </h2>
-        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-        {success && (
-          <p style={{ color: "green", textAlign: "center" }}>{success}</p>
-        )}
-        <form onSubmit={handleSubmit}>
+        
+        {/* Error and Success Messages */}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Field */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label>Email</label>
+          <div>
+            <label className="block mb-2 font-medium">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                fontSize: "1rem",
-              }}
+              className="w-full p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
             />
           </div>
 
           {/* Password Field */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label>Password</label>
+          <div>
+            <label className="block mb-2 font-medium">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                fontSize: "1rem",
-              }}
+              className="w-full p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
             />
           </div>
 
           {/* Role Field */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label>Role</label>
+          <div>
+            <label className="block mb-2 font-medium">Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
               required
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                fontSize: "1rem",
-              }}
+              className="w-full p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
             >
               <option value="Student">Student</option>
               <option value="Supervisor">Supervisor</option>
@@ -157,30 +123,22 @@ const LoginPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              backgroundColor: "#ff9800",
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "1rem",
-            }}
+            className="w-full p-3 bg-amber-500 text-white border-none rounded cursor-pointer text-base font-medium hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2"
           >
             {isRegistering ? "Register" : "Login"}
           </button>
         </form>
 
         {/* Toggle between Login and Register */}
-        <p style={{ textAlign: "center", marginTop: "1rem" }}>
+        <p className="text-center mt-6">
           {isRegistering ? "Already have an account? " : "New user? "}
-          <span
+          <button
             onClick={handleToggle}
-            style={{ color: "#ff9800", cursor: "pointer", fontWeight: "bold" }}
+            className="text-amber-500 font-bold hover:text-amber-600 focus:outline-none"
+            type="button"
           >
             {isRegistering ? "Login here" : "Register here"}
-          </span>
+          </button>
         </p>
       </div>
     </div>

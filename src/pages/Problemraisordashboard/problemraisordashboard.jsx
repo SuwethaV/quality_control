@@ -2,8 +2,10 @@ import { useState } from "react";
 import Header from "../../components/Header/Header";
 import Calender from "../../components/Calender/calender";
 import ApprovalsPanel from "../../components/Approval/ApprovalsPanel";
+import { useNavigate } from "react-router-dom";
 
 function ProblemRaisorDashboard() {
+  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState(3); // Wednesday (index 3) selected by default
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];

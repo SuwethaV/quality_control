@@ -1,3 +1,5 @@
+import Avatar from "@mui/material/Avatar";
+
 const Card = ({ title, status, description, date, author, imageUrl, onClick }) => {
   return (
     <div
@@ -31,13 +33,12 @@ const Card = ({ title, status, description, date, author, imageUrl, onClick }) =
       <div className="flex justify-between items-center">
         <span className="text-xs text-gray-500">{date}</span>
         <div className="flex items-center">
-          <div className="w-6 h-6 rounded-full overflow-hidden mr-2">
-            <img
-              src={imageUrl || "/placeholder.svg"}
-              className="w-full h-full object-cover"
-              alt={author} // Use author's name as alt text for better accessibility
-            />
-          </div>
+          <Avatar
+            alt={author}
+            src={imageUrl}
+            sx={{ width: 24, height: 24 }} // Adjust size as needed
+            className="mr-2"
+          />
           <span className="text-xs text-gray-600">By: {author}</span>
         </div>
       </div>
